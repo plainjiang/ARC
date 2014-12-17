@@ -1,0 +1,30 @@
+Native Client is an open-source project being developed by Google.It is a sandboxing technology  for untrusted x86,ARM and MIPS native
+code ,which can be written in C or C++,in a sandbox. Native Client aims to give browser-based applications
+the computational performance of native applications without compromising safety. Native Client uses Software Fault
+Isolation (SFI)and a secure runtime to direct system interaction
+and side effects through interfaces managed by Native
+Client. Native Client provides operating system portability
+for binary code while supporting performance-oriented features generally absent from web application programming
+environments, such as thread support, instruction set extensions such as SSE, and use of compiler intrinsics and
+hand-coded assembler. Portable Native Client (PNaCl) extends that technology with architecture independence,letting developers compile their code once to run any website and on any architecture with ahead-of-time(AOT) translation.
+A Native Client web application consists of JavaScript, HTML, CSS, and a NaCl module written in a language supported by the SDK. The NaCl SDK currently supports C and C++; as compilers for additional languages are developed, the SDK will be updated.
+Native Client is an umbrella name for a set of related software components for developing C/C++ applications and running them securely on the web. At a high level, Native Client consists of:
+Toolchains:collections of development tools (compilers, linkers, etc.) that transform C/C++ code to Portable Native Client modules or Native Client modules.
+Runtime components:components embedded in the browser or other host platforms that allow execution of Native Client modules securely and efficiently
+Toolchains
+A Native Client toolchain consists of a compiler, a linker, an assembler and other tools that are used to convert C/C++ source code into a module that is loadable by a browser.
+The Native Client SDK provides two toolchains:
+The left side of the diagram shows Portable Native Client(PNaCl, pronounced “pinnacle”). An LLVM based toolchain produces a single, portable (pexe) module. At runtime an ahead-of-time (AOT) translator, built into the browser, translates the pexe into native code for the relevant client architecture.
+The right side of the diagram shows(non-portable) Native Client. A GCC based toolchain produces multiple architecture-dependent (nexe) modules, which are packaged into an application. At runtime the browser determines which nexe to load based on the architecture of the client machine.
+The PNaCl toolchain is recommended for most applications. The NaCl-GCC toolchain should only be used for applications that won’t be distributed on the open web.
+Security
+Since Native Client permits the execution of native code on client machines, special security measures have to be implemented:
+The NaCl sandbox ensures that code accesses system resources only through safe, whitelisted APIs, and operates within its limits without attempting to interfere with other code running either within the browser or outside it.
+The NaCl validator statically analyzes code before running it to make sure it only uses code and data patterns that are permitted and safe.
+These security measures are in addition to the existing sandbox in the Chrome browser. The Native Client module always executes in a process with restricted permissions. The only interaction between this process and the outside world is through defined browser interfaces. Because of the combination of the NaCl sandbox and the Chrome sandbox, we say that Native Client employs a double sandbox design.
+Portability
+Portable Native Client (PNaCl) employs state-of-the-art compiler technology to compile C/C++ source code to a portable bitcode executable (pexe). PNaCl bitcode is an OS- and architecture-independent format that can be freely distributed on the web and embedded in web applications.
+The PNaCl translator is a component embedded in the Chrome browser; its task is to run pexe modules. Internally, the translator compiles a pexe to a nexe (described above), and then executes the nexe within the Native Client sandbox as described above. The translator uses intelligent caching to avoid re-compiling the pexe if it was previously compiled on the client’s browser.
+Native Client also supports the execution of nexe modules directly in the browser. However, since nexes contain architecture-specific machine code, they are not allowed to be distributed on the open web. They can only be used as part of applications and extensions that are installed from the Chrome Web Store.
+
+
